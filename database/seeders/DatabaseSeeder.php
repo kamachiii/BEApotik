@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Apotek;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,5 +22,15 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        Apotek::create([
+            'nama' => 'Kamachi',
+            'rujukan' => true,
+            'rumah_sakit' => 'RS Moga Sembuh',
+            'obat' => ['Paracetamol', 'Tramadol'],
+            'harga_satuan' => [15000, 100000],
+            'total_harga' => 15000 + 100000,
+            'apoteker' => 'Kamachi'
+        ]);
     }
 }

@@ -17,6 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/apotek',[ApotekController::class, 'index']);
 Route::post('/apotek/create',[ApotekController::class, 'store']);
-Route::get('/apotek/create/show/{id}',[ApotekController::class, 'show']);
+Route::get('/apotek/show/{id}',[ApotekController::class, 'show']);
 Route::post('/apotek/update/{id}',[ApotekController::class, 'update']);
-Route::post('delete/apotek/{id}',[ApotekController::class, 'destroy']);
+Route::post('/apotek/delete/{id}',[ApotekController::class, 'destroy']);

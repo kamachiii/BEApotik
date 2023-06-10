@@ -22,6 +22,7 @@ return new class extends Migration
             $table->json('harga_satuan');
             $table->integer('total_harga');
             $table->string('apoteker');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
