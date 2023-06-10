@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Helpers;
-use App\Models\apotek;
+use App\Models\Apotek;
 
 class formatApi{
 
