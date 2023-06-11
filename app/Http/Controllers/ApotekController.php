@@ -12,12 +12,24 @@ class ApotekController extends Controller
 {
     use ApotekTrait; //Menggunakan ApotekTrait
 
-    public function index()
+    public function index(Request $request)
     {
-        $data= Apotek::all();
+        $data= Apotek::all(); // mengambil semua data
+
+        if ($request->query('search_apoteker')){// membuat pencarian berdasarkan apoteker
+            $search = $request->query('search_apoteker');
+
+            $data = Apotek::where('apoteker', $search)->get();
+            if($request->query('limit')) {
+                $limit = $request->query('limit');
+
+                $data = Apotek::where('apoteker', $search)->limit($limit)->get();
+            }
+        }
 
         if($data){
             return formatAPI::createAPI(200, 'berhasil', $data);
+            // return dd($data);
          }else{
             return formatAPI::createAPI(400, 'Failed');
         }
@@ -38,7 +50,7 @@ class ApotekController extends Controller
             $apotek = Apotek::create([
                 'nama' => $request->nama,
                 'rujukan' => $request->rujukan,
-                'rumah_sakit' => $request->rumah_sakit,
+                'rumah_sakit' => $request->rujukan == 1 ? $request->rumah_sakit : null, // Menggunakan operasi tenary untuk menentukan isi rumah_sakit
                 'obat' => $obat,
                 'harga_satuan' => $harga_satuan,
                 'total_harga' => $total_harga,
@@ -51,9 +63,26 @@ class ApotekController extends Controller
              }else{
                 return formatAPI::createAPI(400, 'Failed');
             }
-            
+
         }catch(Exception $error){
             return formatAPI::createAPI(400, 'Gagal',$error);
+        }
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->query('search_apoteker');
+        $limit = $request->query('limit');
+
+        // Lakukan pencarian berdasarkan nilai parameter
+        // Contoh logika pencarian
+        $data = Apotek::where('apoteker', $search)->limit($limit)->get();
+
+        // Berikan hasil pencarian sebagai respons dalam format JSON
+        if($data){
+            return formatAPI::createAPI(200, 'berhasil', $data);
+         }else{
+            return formatAPI::createAPI(400, 'Failed');
         }
     }
 
@@ -98,7 +127,7 @@ class ApotekController extends Controller
             $apotek->update([
                 'nama' => $request->nama,
                 'rujukan' => $request->rujukan,
-                'rumah_sakit' => $request->rumah_sakit,
+                'rumah_sakit' => $request->rujukan == 1 ? $request->rumah_sakit : null,
                 'obat' => $obat,
                 'harga_satuan' => $harga_satuan,
                 'total_harga' => $total_harga,
@@ -118,7 +147,8 @@ class ApotekController extends Controller
         }
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         try{
             $apotek = apotek::findOrFail($id);
             $data = $apotek->delete();
@@ -128,6 +158,69 @@ class ApotekController extends Controller
                 return formatAPI::createAPI(400, 'gagal');
             }
 
+        }catch(Exception $error){
+            return formatAPI::createAPI(400, 'gagal', $error);
+
+        }
+    }
+
+    //? Trash function
+
+    public function getTrash(Request $request)
+    {
+        try {
+            $data= Apotek::onlyTrashed()->get(); // mengambil semua data
+
+            if ($request->query('search_apoteker')){// membuat pencarian berdasarkan apoteker
+                $search = $request->query('search_apoteker');
+
+                $data = Apotek::onlyTrashed()->where('apoteker', $search)->get();
+                if($request->query('limit')) {
+                    $limit = $request->query('limit');
+
+                    $data = Apotek::where('apoteker', $search)->limit($limit)->get();
+                }
+            }
+            if($data){
+                return formatAPI::createAPI(200, 'berhasil', $data);
+            }else{
+                return formatAPI::createAPI(400, 'Failed');
+            }
+        }catch(Exception $error){
+            return formatAPI::createAPI(400, 'gagal', $error);
+
+        }
+    }
+
+    public function restore($id)
+    {
+        try{
+            $data = Apotek::onlyTrashed()->findorfail($id);
+            $data = $data->restore();
+            $data = Apotek::where('id', $id)->get();
+
+            if($data){
+                return formatAPI::createAPI(200, 'berhasil', $data);
+            }else{
+                return formatAPI::createAPI(400, 'Failed');
+            }
+        }catch(Exception $error){
+            return formatAPI::createAPI(400, 'gagal', $error);
+
+        }
+    }
+
+    public function deleteTrash($id)
+    {
+        try{
+            $data = Apotek::onlyTrashed()->findorfail($id);
+            $data = $data->forceDelete();
+
+            if($data){
+                return formatAPI::createAPI(200, 'berhasil', $data);
+            }else{
+                return formatAPI::createAPI(400, 'Failed');
+            }
         }catch(Exception $error){
             return formatAPI::createAPI(400, 'gagal', $error);
 

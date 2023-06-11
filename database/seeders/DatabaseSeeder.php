@@ -24,12 +24,22 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         Apotek::create([
-            'nama' => 'Kamachi',
-            'rujukan' => true,
+            'nama' => 'Kozuki Momonosuke',
+            'rujukan' => 1,
             'rumah_sakit' => 'RS Moga Sembuh',
-            'obat' => ['Paracetamol', 'Tramadol'],
-            'harga_satuan' => [15000, 100000],
-            'total_harga' => 15000 + 100000,
+            'obat' => ['Paracetamol', 'Dexametasol'],
+            'harga_satuan' => [15000, 10000],
+            'total_harga' => 15000 + 10000,
+            'apoteker' => 'Kamachi'
+        ]);
+
+        Apotek::create([
+            'nama' => 'Raul',
+            'rujukan' => 0,
+            'rumah_sakit' => null,
+            'obat' => ['Tramadol', 'Sianida'],
+            'harga_satuan' => [23000, 56000],
+            'total_harga' => 23000 + 56000,
             'apoteker' => 'Kamachi'
         ]);
     }
