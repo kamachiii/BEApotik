@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+//* Rest API routes for Apotek
 Route::prefix('apotek')->group(function () {
     Route::get('/',[ApotekController::class, 'index']);
     Route::post('/create',[ApotekController::class, 'store']);
